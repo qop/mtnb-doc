@@ -25,14 +25,12 @@ MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端�
 [详细的API文档](http://wiki.sankuai.com/display/DEVPUB/mtnb-auth-server++API+v1)
 
 ## 前端
-mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
+```javascript
 require('mtnb');
+```
+mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
 
 # 初始化
-
-请在页面onload之后调用init方法。
-<aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside>
-
 ```javascript
 MTNB.init({
     "nonceStr":"qzpccxe1dgbhjjo",
@@ -47,38 +45,36 @@ MTNB.init({
     }
 });
 ```
+请在页面onload之后调用init方法。
+<aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside>
+
 
 # webview模块
 
 ## 关闭当前webview
-type | name | 描述
---- | ---- | ----
-string | anime | 关闭时执行的动画，如果不传，按照打开的反向动画执行
-
 ```javascript
 MTNB.use('webview.close', {
 	anime: "slideleft"
 });
 ```
-## 打开新的webview
-type | name | 说明
---- | --- | ----
-string | url	| 打开的地址
-string	| anime	| 动画类型：swipeLeft, swipeRight 左右切换；fadeIn, fadeOut 淡入淡出
+type | name | 描述
+--- | ---- | ----
+string | anime | 关闭时执行的动画，如果不传，按照打开的反向动画执行
 
+## 打开新的webview
 ```javascript
 MTNB.use('webview.open', {
 	url: 'http://i.meiutan.com/',
 	anime: "slideleft"
 });
 ```
-
-## 设置webview标题
 type | name | 说明
 --- | --- | ----
-function	|callback	| 监听标题点击的回调
-string | title	| 标题名称
+string | url	| 打开的地址
+string	| anime	| 动画类型：swipeLeft, swipeRight 左右切换；fadeIn, fadeOut 淡入淡出
 
+
+## 设置webview标题
 ```javascript
 MTNB.use('webview.setTitle', {
     title: "一个很长很长的标题",
@@ -87,14 +83,13 @@ MTNB.use('webview.setTitle', {
     }
 });
 ```
-
-## 设置复杂的webview标题
-<aside class="warning">不支持换行</aside>
 type | name | 说明
 --- | --- | ----
-string	| title | 标题名称，使用font来实现
-function | callback | 监听标题点击的回调
+function	|callback	| 监听标题点击的回调
+string | title	| 标题名称
 
+
+## 设置复杂的webview标题
 ```javascript
 MTNB.use('webview.setHtmlTitle', {
     title: "<font size="4" face="arial" color="black">演唱会 </font><font size="2" color="black"> 北京</font><font size="1" color="black">▼</font>",
@@ -103,14 +98,15 @@ MTNB.use('webview.setHtmlTitle', {
     }
 });
 ```
+<aside class="warning">不支持换行</aside>
+type | name | 说明
+--- | --- | ----
+string	| title | 标题名称，使用font来实现
+function | callback | 监听标题点击的回调
+
 
 
 ## 设置角标
-
-type | name | 说明
---- | --- | ----
-object|	data|	附加数据，其中的callback为事件触发后的回调，参数是{}
-string|	type|	icon类型，“text”文字，“share”分享
 ```javascript
 // 分享
 MTNB.use('webview.setIcon', {
@@ -158,6 +154,10 @@ MTNB.use('webview.setIcon', [
     }
 ]);
 ```
+type | name | 说明
+--- | --- | ----
+object|	data|	附加数据，其中的callback为事件触发后的回调，参数是{}
+string|	type|	icon类型，“text”文字，“share”分享
 
 # UI模块
 
