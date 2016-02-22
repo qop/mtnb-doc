@@ -274,29 +274,28 @@
 </tbody></table>
 
 <h2 id="订制左上角按钮">订制左上角按钮</h2>
+<pre class="highlight javascript"><code>    <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">search</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">pare</span> <span class="o">=</span> <span class="nx">search</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'='</span><span class="p">);</span>
+            <span class="nx">params</span><span class="p">[</span><span class="nx">pare</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">pare</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">.</span><span class="nx">reloaded</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">params</span><span class="p">.</span><span class="nx">reloaded</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">queryArray</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">queryArray</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nx">params</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="s1">'//'</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">host</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">+</span> <span class="s1">'?'</span> <span class="o">+</span> <span class="nx">queryArray</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre>
 
 <p>开店宝左上角按钮，请参考<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=372249318">此文档</a></p>
 
 <p>因为android没有完全实现webview相关的接口，尤其是webview.open，所以推荐使用location.href的方式进行页面跳转。</p>
 
-<p>开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码：
-<code class="prettyprint">javascript
-    var params = {};
-    if (location.search) {
-        location.search.substr(1).split(&#39;&amp;&#39;).map(function(search) {
-            var pare = search.split(&#39;=&#39;);
-            params[pare[0]] = decodeURIComponent(pare[1]);
-        });
-    }
-    if (!params.reloaded) {
-        params.reloaded = 1;
-        var queryArray = [];
-        for (var k in params) {
-            queryArray.push(k + &#39;=&#39; + params[k]);
-        }
-        location.href = location.protocol + &#39;//&#39; + location.host + location.pathname + &#39;?&#39; + queryArray.join(&#39;&amp;&#39;);
-    }
-</code></p>
+<p>开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码:</p>
 
 <h1 id="ui模块">UI模块</h1>
 
