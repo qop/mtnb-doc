@@ -59,14 +59,12 @@
 <a href="http://wiki.sankuai.com/display/DEVPUB/mtnb-auth-server++API+v1">详细的API文档</a></p>
 
 <h2 id="前端">前端</h2>
+<pre class="highlight javascript"><code><span class="nx">require</span><span class="p">(</span><span class="s1">'mtnb'</span><span class="p">);</span>
+</code></pre>
 
-<p>mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
-require(&lsquo;mtnb&rsquo;);</p>
+<p>mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。</p>
 
 <h1 id="初始化">初始化</h1>
-
-<p>请在页面onload之后调用init方法。
-<aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside></p>
 <pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
     <span class="s2">"nonceStr"</span><span class="p">:</span><span class="s2">"qzpccxe1dgbhjjo"</span><span class="p">,</span>
     <span class="s2">"ts"</span><span class="p">:</span><span class="mi">1433347371266</span><span class="p">,</span>
@@ -81,9 +79,16 @@ require(&lsquo;mtnb&rsquo;);</p>
 <span class="p">});</span>
 </code></pre>
 
+<p>请在页面onload之后调用init方法。
+<aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside></p>
+
 <h1 id="webview模块">webview模块</h1>
 
 <h2 id="关闭当前webview">关闭当前webview</h2>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.close'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">anime</span><span class="p">:</span> <span class="s2">"slideleft"</span>
+<span class="p">});</span>
+</code></pre>
 
 <table><thead>
 <tr>
@@ -98,12 +103,13 @@ require(&lsquo;mtnb&rsquo;);</p>
 <td>关闭时执行的动画，如果不传，按照打开的反向动画执行</td>
 </tr>
 </tbody></table>
-<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.close'</span><span class="p">,</span> <span class="p">{</span>
+
+<h2 id="打开新的webview">打开新的webview</h2>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.open'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s1">'http://i.meiutan.com/'</span><span class="p">,</span>
     <span class="na">anime</span><span class="p">:</span> <span class="s2">"slideleft"</span>
 <span class="p">});</span>
 </code></pre>
-
-<h2 id="打开新的webview">打开新的webview</h2>
 
 <table><thead>
 <tr>
@@ -123,13 +129,15 @@ require(&lsquo;mtnb&rsquo;);</p>
 <td>动画类型：swipeLeft, swipeRight 左右切换；fadeIn, fadeOut 淡入淡出</td>
 </tr>
 </tbody></table>
-<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.open'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">url</span><span class="p">:</span> <span class="s1">'http://i.meiutan.com/'</span><span class="p">,</span>
-    <span class="na">anime</span><span class="p">:</span> <span class="s2">"slideleft"</span>
-<span class="p">});</span>
-</code></pre>
 
 <h2 id="设置webview标题">设置webview标题</h2>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setTitle'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s2">"一个很长很长的标题"</span><span class="p">,</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 标题被点击后的操作...</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
 
 <table><thead>
 <tr>
@@ -149,15 +157,15 @@ require(&lsquo;mtnb&rsquo;);</p>
 <td>标题名称</td>
 </tr>
 </tbody></table>
-<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setTitle'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">title</span><span class="p">:</span> <span class="s2">"一个很长很长的标题"</span><span class="p">,</span>
+
+<h2 id="设置复杂的webview标题">设置复杂的webview标题</h2>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setHtmlTitle'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s2">"&lt;font size="</span><span class="mi">4</span><span class="s2">" face="</span><span class="nx">arial</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;演唱会 &lt;/font&gt;&lt;font size="</span><span class="mi">2</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt; 北京&lt;/font&gt;&lt;font size="</span><span class="mi">1</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;▼&lt;/font&gt;"</span><span class="p">,</span>
     <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
         <span class="c1">// 标题被点击后的操作...</span>
     <span class="p">}</span>
 <span class="p">});</span>
 </code></pre>
-
-<h2 id="设置复杂的webview标题">设置复杂的webview标题</h2>
 
 <aside class="warning">不支持换行</aside>
 
@@ -179,34 +187,8 @@ require(&lsquo;mtnb&rsquo;);</p>
 <td>监听标题点击的回调</td>
 </tr>
 </tbody></table>
-<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setHtmlTitle'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">title</span><span class="p">:</span> <span class="s2">"&lt;font size="</span><span class="mi">4</span><span class="s2">" face="</span><span class="nx">arial</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;演唱会 &lt;/font&gt;&lt;font size="</span><span class="mi">2</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt; 北京&lt;/font&gt;&lt;font size="</span><span class="mi">1</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;▼&lt;/font&gt;"</span><span class="p">,</span>
-    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="c1">// 标题被点击后的操作...</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre>
 
 <h2 id="设置角标">设置角标</h2>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>name</th>
-<th>说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>object</td>
-<td>data</td>
-<td>附加数据，其中的callback为事件触发后的回调，参数是{}</td>
-</tr>
-<tr>
-<td>string</td>
-<td>type</td>
-<td>icon类型，“text”文字，“share”分享</td>
-</tr>
-</tbody></table>
 <pre class="highlight javascript"><code><span class="c1">// 分享</span>
 <span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setIcon'</span><span class="p">,</span> <span class="p">{</span>
     <span class="na">type</span><span class="p">:</span> <span class="s2">"share"</span><span class="p">,</span>
@@ -253,6 +235,25 @@ require(&lsquo;mtnb&rsquo;);</p>
     <span class="p">}</span>
 <span class="p">]);</span>
 </code></pre>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>object</td>
+<td>data</td>
+<td>附加数据，其中的callback为事件触发后的回调，参数是{}</td>
+</tr>
+<tr>
+<td>string</td>
+<td>type</td>
+<td>icon类型，“text”文字，“share”分享</td>
+</tr>
+</tbody></table>
 
 <h1 id="ui模块">UI模块</h1>
 
