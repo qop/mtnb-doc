@@ -44,7 +44,7 @@ var authInfo = {
     "sign":"a7b8aafa2750515638179c13e1923cd336b47e04"
 };
 window.onload = function() {
-	MTNB.init(authInfo, function (res) {
+	MTNB.init(authInfo, function (res) {// native用这些参数请求签名验证接口进行验证。
     	if (res.status === 0) {
         	// 鉴权成功
     	} else {
@@ -170,6 +170,29 @@ type | name | 说明
 object|	data|	附加数据，其中的callback为事件触发后的回调，参数是{}
 string|	type|	icon类型，“text”文字，“share”分享
 
+## 订制左上角按钮
+开店宝左上角按钮，请参考[此文档](http://wiki.sankuai.com/pages/viewpage.action?pageId=372249318)
+
+因为android没有完全实现webview相关的接口，尤其是webview.open，所以推荐使用location.href的方式进行页面跳转。
+
+开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码：
+```javascript
+	var params = {};
+    if (location.search) {
+        location.search.substr(1).split('&').map(function(search) {
+            var pare = search.split('=');
+            params[pare[0]] = decodeURIComponent(pare[1]);
+        });
+    }
+    if (!params.reloaded) {
+        params.reloaded = 1;
+        var queryArray = [];
+        for (var k in params) {
+            queryArray.push(k + '=' + params[k]);
+        }
+        location.href = location.protocol + '//' + location.host + location.pathname + '?' + queryArray.join('&');
+    }
+```
 # UI模块
 点评开发环境提供的js功能，通过extend方式挂在MTNB对象上。
 
