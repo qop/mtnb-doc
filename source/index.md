@@ -13,7 +13,7 @@ search: true
 
 # 概述
 
-MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端应用（美团app，开店宝，猫眼等）与网页应用信道的桥梁。MTNB也作为美团移动桥协议在webapp中的命名空间存在。
+MTNB(meituan native bridge)，是用来在混合应用开发中打通客户端应用（美团app，开店宝，猫眼等）与网页应用信道的桥梁。MTNB也作为美团移动桥协议在webapp中的命名空间存在。
 [详细文档](http://wiki.sankuai.com/display/DEVPUB/Meituan+Native+Bridge)
 
 # 引入
@@ -28,7 +28,11 @@ MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端�
 ```javascript
 require('mtnb');
 ```
-mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
+
+[mtnb模块](http://code.dianpingoa.com/ed-f2e/mtnb)目前仅支持通过Cortex通过CommonJS标准的方式引入。
+点评侧对mtnb做了二次封装，提供了UI及storage的一些功能。
+
+在下一个版本中会改为npm方式引入，到时候也会提供UI和storage相应的的js扩展包。
 
 # 初始化
 ```javascript
@@ -38,17 +42,18 @@ var authInfo = {
     "url":"http://103.227.76.185/webview",          
     "sign":"a7b8aafa2750515638179c13e1923cd336b47e04"
 };
-MTNB.init(authInfo, function (res) {
-    if (res.status === 0) {
-        // 鉴权成功
-    } else {
-        // 鉴权失败
-    }
-});
+window.onload = function() {
+	MTNB.init(authInfo, function (res) {
+    	if (res.status === 0) {
+        	// 鉴权成功
+    	} else {
+        	// 鉴权失败
+    	}
+	});
+};
 ```
 <aside class="warning">init方法必须在页面onload之后调用。</aside>
 <aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside>
-
 
 # webview模块
 
@@ -108,7 +113,6 @@ type | name | 说明
 --- | --- | ----
 string	| title | 标题名称，使用font来实现
 function | callback | 监听标题点击的回调
-
 
 
 ## 设置角标
@@ -282,4 +286,5 @@ MTNB.del({
 ```
 删除store的值。
 <aside class="warning">使用前需要先使用`MTNB.config({bizname:“your-biz-name”});`进行配置</aside>
+
 
