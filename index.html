@@ -53,13 +53,14 @@
 
 <p>使用MTNB需要通过BA认证，因此需要后端输出authInfo，前端使用authInfo鉴权，通过鉴权才可以使用jsbridge提供的功能。</p>
 
-<h2 id="后端需要提供">后端需要提供</h2>
+<h2 id="后端的工作">后端的工作</h2>
 
 <p>后端需要给前端页面提供鉴权信息，点评环境-商家端(e.dianping.com)如需使用可以直接调用商家平台的服务，详情请咨询朱凯(kevin.zhu)。
 <a href="http://wiki.sankuai.com/display/DEVPUB/mtnb-auth-server++API+v1">详细的API文档</a></p>
 
 <h2 id="前端如何引入">前端如何引入</h2>
 <pre class="highlight javascript"><code><span class="nx">require</span><span class="p">(</span><span class="s1">'mtnb'</span><span class="p">);</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">MTNB</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
 </code></pre>
 
 <p><a href="http://code.dianpingoa.com/ed-f2e/mtnb">mtnb模块</a>目前仅支持通过Cortex通过CommonJS标准的方式引入。
@@ -75,7 +76,7 @@
     <span class="s2">"sign"</span><span class="p">:</span><span class="s2">"a7b8aafa2750515638179c13e1923cd336b47e04"</span>
 <span class="p">};</span>
 <span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">MTNB</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">authInfo</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">MTNB</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">authInfo</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span><span class="c1">// native用这些参数请求签名验证接口进行验证。</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// 鉴权成功</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -271,6 +272,31 @@
 <td>icon类型，“text”文字，“share”分享</td>
 </tr>
 </tbody></table>
+
+<h2 id="订制左上角按钮">订制左上角按钮</h2>
+
+<p>开店宝左上角按钮，请参考<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=372249318">此文档</a></p>
+
+<p>因为android没有完全实现webview相关的接口，尤其是webview.open，所以推荐使用location.href的方式进行页面跳转。</p>
+
+<p>开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码：
+<code class="prettyprint">javascript
+    var params = {};
+    if (location.search) {
+        location.search.substr(1).split(&#39;&amp;&#39;).map(function(search) {
+            var pare = search.split(&#39;=&#39;);
+            params[pare[0]] = decodeURIComponent(pare[1]);
+        });
+    }
+    if (!params.reloaded) {
+        params.reloaded = 1;
+        var queryArray = [];
+        for (var k in params) {
+            queryArray.push(k + &#39;=&#39; + params[k]);
+        }
+        location.href = location.protocol + &#39;//&#39; + location.host + location.pathname + &#39;?&#39; + queryArray.join(&#39;&amp;&#39;);
+    }
+</code></p>
 
 <h1 id="ui模块">UI模块</h1>
 
