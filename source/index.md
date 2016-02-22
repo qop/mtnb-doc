@@ -13,18 +13,18 @@ search: true
 
 # 概述
 
-MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端应用与网页应用信道的桥梁。MTNB也作为美团移动桥协议在webapp中的命名空间存在。
+MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端应用（美团app，开店宝，猫眼等）与网页应用信道的桥梁。MTNB也作为美团移动桥协议在webapp中的命名空间存在。
 [详细文档](http://wiki.sankuai.com/display/DEVPUB/Meituan+Native+Bridge)
 
 # 引入
 
 使用MTNB需要通过BA认证，因此需要后端输出authInfo，前端使用authInfo鉴权，通过鉴权才可以使用jsbridge提供的功能。
 
-## 后端
+## 后端需要提供
 后端需要给前端页面提供鉴权信息，点评环境-商家端(e.dianping.com)如需使用可以直接调用商家平台的服务，详情请咨询朱凯(kevin.zhu)。
 [详细的API文档](http://wiki.sankuai.com/display/DEVPUB/mtnb-auth-server++API+v1)
 
-## 前端
+## 前端如何引入
 ```javascript
 require('mtnb');
 ```
@@ -32,12 +32,13 @@ mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
 
 # 初始化
 ```javascript
-MTNB.init({
+var authInfo = {
     "nonceStr":"qzpccxe1dgbhjjo",
     "ts":1433347371266,
     "url":"http://103.227.76.185/webview",          
     "sign":"a7b8aafa2750515638179c13e1923cd336b47e04"
-}, function (res) {
+};
+MTNB.init(authInfo, function (res) {
     if (res.status === 0) {
         // 鉴权成功
     } else {
@@ -45,7 +46,7 @@ MTNB.init({
     }
 });
 ```
-请在页面onload之后调用init方法。
+<aside class="warning">init方法必须在页面onload之后调用。</aside>
 <aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside>
 
 
@@ -57,6 +58,7 @@ MTNB.use('webview.close', {
 	anime: "slideleft"
 });
 ```
+<aside class="warning">在MTNB.init成功回调之后才可使用</aside>
 type | name | 描述
 --- | ---- | ----
 string | anime | 关闭时执行的动画，如果不传，按照打开的反向动画执行
@@ -68,6 +70,7 @@ MTNB.use('webview.open', {
 	anime: "slideleft"
 });
 ```
+<aside class="warning">在MTNB.init成功回调之后才可使用</aside>
 type | name | 说明
 --- | --- | ----
 string | url	| 打开的地址
@@ -83,6 +86,7 @@ MTNB.use('webview.setTitle', {
     }
 });
 ```
+<aside class="warning">在MTNB.init成功回调之后才可使用</aside>
 type | name | 说明
 --- | --- | ----
 function	|callback	| 监听标题点击的回调
@@ -98,6 +102,7 @@ MTNB.use('webview.setHtmlTitle', {
     }
 });
 ```
+<aside class="warning">在MTNB.init成功回调之后才可使用</aside>
 <aside class="warning">不支持换行</aside>
 type | name | 说明
 --- | --- | ----
@@ -154,20 +159,127 @@ MTNB.use('webview.setIcon', [
     }
 ]);
 ```
+<aside class="warning">在MTNB.init成功回调之后才可使用</aside>
 type | name | 说明
 --- | --- | ----
 object|	data|	附加数据，其中的callback为事件触发后的回调，参数是{}
 string|	type|	icon类型，“text”文字，“share”分享
 
 # UI模块
+点评开发环境提供的js功能，通过extend方式挂在MTNB对象上。
+
+只生成dom，样式需要额外依赖或者自己实现，如果是开店宝，我们提供了样式[开店宝基础样式组件](http://code.dianpingoa.com/ed-f2e/util-mtshop-m-less-demo/tree/master)。
+
+js功能不依赖于MTNB.init。
 
 ## alert
+```javascript
+MTNB.alert({
+    title: 'title', // 标题文字
+    message: 'message', // 内容文字
+    button: 'button', // 按钮文字
+    success: function(){
+        // 用户点击确认
+    }
+});
+```
+弹出类似于window.alert的结构。
+<aside class="success">不依赖于MTNB.init</aside>
+<aside class="warning">依赖开店宝样式组件库@dp/util-mtshop-m-less-demo</aside>
 
 ## confirm
+```javascript
+DPMer.confirm({
+    title: 'title', // 标题文字
+    message: 'message', // 内容文字
+    okButton: 'OK', // 确认按钮文字
+    cancelButton: 'Cancel', // 取消按钮文字
+    success: function(e) {
+        // 用户点击确认或取消
+        if (e.ret) {} // true: 确认 false: 取消
+    }
+});
+```
+弹出类似于window.confirm的结构，有确定和取消的点击回调。
+<aside class="success">不依赖于MTNB.init</aside>
+<aside class="warning">依赖开店宝样式组件库@dp/util-mtshop-m-less-demo</aside>
 
 ## toast
+```javascript
+DPMer.toast({
+    title: 'title', // 文字
+    timeout: 2000 // 持续时间
+});
+```
+弹出一段简短的信息，一定时间后消失。
+<aside class="success">不依赖于MTNB.init</aside>
+<aside class="warning">依赖开店宝样式组件库@dp/util-mtshop-m-less-demo</aside>
 
 ## tooltip
+```javascript
+MTNB.tooltip({
+	targetEl: $('.level_func'),// zepto object
+	placement: 'right',// top/right/bottom/left
+	message: '请设置会员等级权益，否则<br>该会员卡无法正式启用', //可以传入string或者html
+	timeout: 3000 // 3000ms后自动消失
+});
+```
+带箭头的，在指定位置出现的，一定时间后自动消失的提示信息。
+<aside class="success">不依赖于MTNB.init</aside>
+<aside class="warning">依赖开店宝样式组件库@dp/util-mtshop-m-less-demo</aside>
 
 ## loading
+
+todo
+
+# storage模块
+使用localStorage实现的异步存储模块。
+<aside class="warning">使用前需要config bizname</aside>
+
+## store
+
+```javascript
+MTNB.config({
+	bizname: 'app-mtb-club'// 通常使用包名
+});
+DPMer.store({
+	key: "key",
+	value: "value"
+	success: function(){
+    	// 存值成功
+	}
+});
+```
+储值，value必须是字符串。
+<aside class="warning">使用前需要先使用`MTNB.config({bizname:“your-biz-name”});`进行配置</aside>
+## retrieve
+
+```javascript
+MTNB.config({
+	bizname: 'app-mtb-club'// 通常使用包名
+});
+MTNB.retrieve({
+	key: 'key',
+	success: function(e) {
+		alert(e.value);
+	}
+});
+```
+取store的值。
+<aside class="warning">使用前需要先使用`MTNB.config({bizname:“your-biz-name”});`进行配置</aside>
+
+## del
+```javascript
+MTNB.config({
+	bizname: 'app-mtb-club'// 通常使用包名
+});
+MTNB.del({
+	key: 'key',
+	success: function(e) {
+		// del success
+	}
+});
+```
+删除store的值。
+<aside class="warning">使用前需要先使用`MTNB.config({bizname:“your-biz-name”});`进行配置</aside>
 
