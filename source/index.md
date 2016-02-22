@@ -171,11 +171,6 @@ object|	data|	附加数据，其中的callback为事件触发后的回调，参�
 string|	type|	icon类型，“text”文字，“share”分享
 
 ## 订制左上角按钮
-开店宝左上角按钮，请参考[此文档](http://wiki.sankuai.com/pages/viewpage.action?pageId=372249318)
-
-因为android没有完全实现webview相关的接口，尤其是webview.open，所以推荐使用location.href的方式进行页面跳转。
-
-开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码：
 ```javascript
 	var params = {};
     if (location.search) {
@@ -193,6 +188,13 @@ string|	type|	icon类型，“text”文字，“share”分享
         location.href = location.protocol + '//' + location.host + location.pathname + '?' + queryArray.join('&');
     }
 ```
+
+开店宝左上角按钮，请参考[此文档](http://wiki.sankuai.com/pages/viewpage.action?pageId=372249318)
+
+因为android没有完全实现webview相关的接口，尤其是webview.open，所以推荐使用location.href的方式进行页面跳转。
+
+开店宝webview有一个已知的bug是：webview打开页面A跳转页面B，再点返回直接关闭webview，针对此问题的解决方法是，页面加载完自动进行一次页面跳转，示例代码:
+
 # UI模块
 点评开发环境提供的js功能，通过extend方式挂在MTNB对象上。
 
