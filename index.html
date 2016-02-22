@@ -46,15 +46,213 @@
       <div class="content">
         <h1 id="概述">概述</h1>
 
-<p>mtnb是啥</p>
+<p>MTNB(meituan native bridge)，是用来在混血应用开发中打通客户端应用与网页应用信道的桥梁。MTNB也作为美团移动桥协议在webapp中的命名空间存在。
+<a href="http://wiki.sankuai.com/display/DEVPUB/Meituan+Native+Bridge">详细文档</a></p>
 
-<h1 id="引入-测试">引入-测试</h1>
+<h1 id="引入">引入</h1>
 
-<p>如何引入-测试</p>
+<p>使用MTNB需要通过BA认证，因此需要后端输出authInfo，前端使用authInfo鉴权，通过鉴权才可以使用jsbridge提供的功能。</p>
 
 <h2 id="后端">后端</h2>
 
+<p>后端需要给前端页面提供鉴权信息，点评环境-商家端(e.dianping.com)如需使用可以直接调用商家平台的服务，详情请咨询朱凯(kevin.zhu)。
+<a href="http://wiki.sankuai.com/display/DEVPUB/mtnb-auth-server++API+v1">详细的API文档</a></p>
+
 <h2 id="前端">前端</h2>
+
+<p>mtnb模块目前仅支持通过Cortex通过CommonJS标准的方式引入。
+require(&lsquo;mtnb&rsquo;);</p>
+
+<h1 id="初始化">初始化</h1>
+
+<p>请在页面onload之后调用init方法。
+<aside class="warning">MTNB中所有和native相关的接口都需要在鉴权成功后使用。</aside></p>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+    <span class="s2">"nonceStr"</span><span class="p">:</span><span class="s2">"qzpccxe1dgbhjjo"</span><span class="p">,</span>
+    <span class="s2">"ts"</span><span class="p">:</span><span class="mi">1433347371266</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span><span class="s2">"http://103.227.76.185/webview"</span><span class="p">,</span>          
+    <span class="s2">"sign"</span><span class="p">:</span><span class="s2">"a7b8aafa2750515638179c13e1923cd336b47e04"</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 鉴权成功</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// 鉴权失败</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
+
+<h1 id="webview模块">webview模块</h1>
+
+<h2 id="关闭当前webview">关闭当前webview</h2>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>描述</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>anime</td>
+<td>关闭时执行的动画，如果不传，按照打开的反向动画执行</td>
+</tr>
+</tbody></table>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.close'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">anime</span><span class="p">:</span> <span class="s2">"slideleft"</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="打开新的webview">打开新的webview</h2>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>url</td>
+<td>打开的地址</td>
+</tr>
+<tr>
+<td>string</td>
+<td>anime</td>
+<td>动画类型：swipeLeft, swipeRight 左右切换；fadeIn, fadeOut 淡入淡出</td>
+</tr>
+</tbody></table>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.open'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s1">'http://i.meiutan.com/'</span><span class="p">,</span>
+    <span class="na">anime</span><span class="p">:</span> <span class="s2">"slideleft"</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="设置webview标题">设置webview标题</h2>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>function</td>
+<td>callback</td>
+<td>监听标题点击的回调</td>
+</tr>
+<tr>
+<td>string</td>
+<td>title</td>
+<td>标题名称</td>
+</tr>
+</tbody></table>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setTitle'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s2">"一个很长很长的标题"</span><span class="p">,</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 标题被点击后的操作...</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="设置复杂的webview标题">设置复杂的webview标题</h2>
+
+<aside class="warning">不支持换行</aside>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>title</td>
+<td>标题名称，使用font来实现</td>
+</tr>
+<tr>
+<td>function</td>
+<td>callback</td>
+<td>监听标题点击的回调</td>
+</tr>
+</tbody></table>
+<pre class="highlight javascript"><code><span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setHtmlTitle'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s2">"&lt;font size="</span><span class="mi">4</span><span class="s2">" face="</span><span class="nx">arial</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;演唱会 &lt;/font&gt;&lt;font size="</span><span class="mi">2</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt; 北京&lt;/font&gt;&lt;font size="</span><span class="mi">1</span><span class="s2">" color="</span><span class="nx">black</span><span class="s2">"&gt;▼&lt;/font&gt;"</span><span class="p">,</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 标题被点击后的操作...</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="设置角标">设置角标</h2>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>object</td>
+<td>data</td>
+<td>附加数据，其中的callback为事件触发后的回调，参数是{}</td>
+</tr>
+<tr>
+<td>string</td>
+<td>type</td>
+<td>icon类型，“text”文字，“share”分享</td>
+</tr>
+</tbody></table>
+<pre class="highlight javascript"><code><span class="c1">// 分享</span>
+<span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setIcon'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="s2">"share"</span><span class="p">,</span>
+    <span class="na">channel</span><span class="p">:</span> <span class="mi">385</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">,</span>
+    <span class="na">title</span><span class="p">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+    <span class="na">pic</span><span class="p">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'img'</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'src'</span><span class="p">),</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 分享完成后的回调</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="c1">// 链接</span>
+<span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setIcon'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+    <span class="na">text</span><span class="p">:</span> <span class="s2">"退款帮助"</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s2">"i.meituan.com/help/refund"</span><span class="p">,</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 点击分享的回调</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="c1">// 回调</span>
+<span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setIcon'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+    <span class="na">text</span><span class="p">:</span> <span class="s2">"设置提醒"</span><span class="p">,</span>
+    <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 点击提醒的回调</span>
+    <span class="p">},</span>
+<span class="p">});</span>
+<span class="c1">// 设置多个icon</span>
+<span class="nx">MTNB</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'webview.setIcon'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+        <span class="na">text</span><span class="p">:</span> <span class="s2">"设置提醒"</span><span class="p">,</span>
+        <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// 交互</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+        <span class="na">text</span><span class="p">:</span> <span class="s2">"收藏"</span><span class="p">,</span>
+        <span class="na">callback</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// 交互</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]);</span>
+</code></pre>
 
 <h1 id="ui模块">UI模块</h1>
 
